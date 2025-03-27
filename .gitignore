@@ -1,6 +1,4 @@
 fine_tuned_model/
-pdfs/
-texts/
 .idea/
 __pycache__/
 *.pyc
