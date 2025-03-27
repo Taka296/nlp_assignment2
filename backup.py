@@ -1,12 +1,31 @@
-docs = [
-    "Tokyo is the capital of Japan and the most populous city.",
-    "Mount Fuji is the highest mountain in Japan, with an elevation of 3,776 meters.",
-    "Kyoto is an ancient city with over 1,000 years of history and many temples and shrines.",
-    "Osaka is the second-largest city in Japan and the economic center of the Kansai region.",
-    "Hokkaido is the northernmost island of Japan, known for heavy snowfall in winter and popular ski resorts.",
-    "Okinawa is the southernmost prefecture of Japan, featuring a subtropical climate and beautiful beaches.",
-    "The Shinkansen is Japan's high-speed rail system, allowing travel from Tokyo to Osaka in about two and a half hours.",
-    "Japanese cuisine includes a variety of dishes such as sushi, sashimi, tempura, and udon.",
-    "The cherry blossom is Japan's national flower, and every spring, people celebrate Hanami (flower viewing).",
-    "Sumo is Japan's national sport, where wrestlers, called rikishi, compete in a ring known as the dohyo."
-]
+# Execution example
+contexts = ["The Environmental Enforcement Act was enacted in 2010 to ensure compliance with Canada's environmental protection laws.",
+            "The Environmental Enforcement Act strengthens the authority of enforcement officers to ensure compliance with environmental protection regulations."]
+questions = ["When was the Environmental Enforcement Act enacted?",
+             "What does the Environmental Enforcement Act strengthen?"]
+
+st.title("Fine Tuning Test")
+trainer = FineTuning()
+model, tokenizer = trainer.fine_tuning(contexts, questions)
+st.write(model)
+st.write(tokenizer)
+
+# Get the most probable start and end positions
+"""
+start_idx = torch.argmax(start_logits).item()
+end_idx = torch.argmax(end_logits).item()
+
+st.write(f"start_idx: {start_idx}")
+st.write(f"end_idx: {end_idx}")
+
+# If we don't have a valid span, return empty string
+if start_idx > end_idx:
+    return ""
+
+# Convert tokens to text
+input_ids = inputs.input_ids[0]
+tokens = input_ids[start_idx:end_idx + 1]
+answer = tokenizer.decode(tokens, skip_special_tokens=True)
+
+return answer        
+"""

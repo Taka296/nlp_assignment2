@@ -85,5 +85,7 @@ class Retriever:
         index = faiss.IndexFlatL2(dimension)
         index.add(np.array(chunk_embeddings).astype('float32'))
 
+        #print(f"Number of vectors in FAISS index: {index.ntotal}")
+
         return index, chunks
 
