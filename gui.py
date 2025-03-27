@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from text_extractor import TextExtractor
-from retriever_old import Retriever
+from retriever import Retriever
 from reader import Reader
 from fine_tuning import FineTuning
 import os
