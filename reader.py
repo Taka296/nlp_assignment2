@@ -44,16 +44,15 @@ class Reader:
         # Check if the span is valid
         for start_i in start_indexes:
             for end_i in end_indexes:
-                if start_i <= end_i and end_i - start_i < 30:
+                if start_i <= end_i and end_i - start_i < 50:
                     score = start_logits[start_i] + end_logits[end_i]
-                    if score > best_score:
+                    if score > best_score and score > 7.0:
                         best_score = score
                         tokens = inputs.input_ids[0][start_i:end_i + 1]
                         answer = tokenizer.decode(tokens, skip_special_tokens=True)
                         confidence = (start_logits[start_i].item() + end_logits[end_i].item())
-                        if confidence > 7.0:
-                            best_answer = answer
+                        best_answer = answer
         if best_answer:
             return best_answer, confidence
         else:
-            return "No valid answer found", confidence
+            return "No valid answer found", 0.0

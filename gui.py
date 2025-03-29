@@ -43,14 +43,19 @@ def main():
             # Convert the retrieved context to a string
             context = str(context) if context else "No context found."
 
-            # Display retrieved documents
-            st.subheader("Retrieved Contents:")
-            for doc in retrieved_documents:
-                st.text(doc.content)
+            # Remove unnecessary charactor [''] and \n
+            context = context.replace('[', '') \
+                .replace(']', '') \
+                .replace("'", '') \
+                .replace('\\n', ' ')
+            context = ' '.join(context.split())
 
         # Reader part: Generate an answer
         with st.spinner('Generating answer...'):
+            # Test fine-tuned model
             reader = Reader(model_path)
+            # Test baseline model
+            #reader = Reader("deepset/roberta-base-squad2")
             answer, confidence = reader.answer_question(context, question)
 
         # Display answer
@@ -63,7 +68,7 @@ def main():
 
         # Display context(source)
         st.subheader("Source:")
-        st.text(context)
+        st.info(context)
 
 if __name__ == "__main__":
     main()
