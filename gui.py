@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
-from text_extractor import TextExtractor
-from retriever import Retriever
+#from text_extractor import TextExtractor
+#from retriever import Retriever
+from retriever_haystack import HayStackRetriever
 from reader import Reader
 from fine_tuning import FineTuning
 import os
@@ -12,9 +13,9 @@ def main():
     st.title("Canadian Legal Q&A System")
     st.subheader("Ask questions about Canadian employment law")
 
-    # Extract texts from pdf files
-    text_extractor = TextExtractor()
-    doc_paths = text_extractor.extract_text()
+    # # Extract texts from pdf files
+    # text_extractor = TextExtractor()
+    # doc_paths = text_extractor.extract_text()
 
     # If a QA model has not been fine-tuned yet, fine-tune the model
     model_path = './fine_tuned_model'
@@ -35,8 +36,17 @@ def main():
 
         # Retriever part: Retrieve context based on the question
         with st.spinner("Retrieving context..."):
-            retriever = Retriever(doc_paths)
-            context = retriever.retrieve_context(question)
+            # retriever = Retriever(doc_paths)
+            retriever = HayStackRetriever()
+            retrieved_documents, retreived_file_paths, context = retriever.retrieve_context(question)
+
+            # Convert the retrieved context to a string
+            context = str(context) if context else "No context found."
+
+            # Display retrieved documents
+            st.subheader("Retrieved Contents:")
+            for doc in retrieved_documents:
+                st.text(doc.content)
 
         # Reader part: Generate an answer
         with st.spinner('Generating answer...'):
@@ -45,15 +55,15 @@ def main():
 
         # Display answer
         st.subheader("Answer:")
-        st.write(answer)
+        st.text(answer)
 
         # Display confidence score
         st.subheader("Confidence Score:")
-        st.write(f"{confidence:.2f}")
+        st.text(f"{confidence:.2f}")
 
         # Display context(source)
         st.subheader("Source:")
-        st.info(context)
+        st.text(context)
 
 if __name__ == "__main__":
     main()
